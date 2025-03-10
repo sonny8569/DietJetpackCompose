@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.sungil.jetpackcomposediet"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.sungil.jetpackcomposediet"
         minSdk = 32
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -66,4 +66,12 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    //splash
+    implementation(libs.androidx.splash)
+    //firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+    //composeLifeCycle
+    implementation(libs.compose.lifecycle)
 }

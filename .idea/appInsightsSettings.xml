@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.sungil.jetpackcomposediet" />
+                  <option name="mobileSdkAppId" value="1:534988649411:android:b73e07b4a8e4f9400f4376" />
+                  <option name="projectId" value="dietapp-7ebd8" />
+                  <option name="projectNumber" value="534988649411" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
