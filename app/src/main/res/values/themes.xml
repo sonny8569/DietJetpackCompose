@@ -2,4 +2,12 @@
 <resources>
 
     <style name="Theme.JetpackComposeDiet" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.JetpackComposeDiet.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/black</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_intro</item>
+        <item name="windowSplashScreenAnimationDuration">3000</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
 </resources>
