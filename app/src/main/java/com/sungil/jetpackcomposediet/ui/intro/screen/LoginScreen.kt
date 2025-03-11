@@ -13,6 +13,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,7 +33,11 @@ import androidx.compose.ui.unit.sp
 import com.sungil.jetpackcomposediet.R
 
 @Composable
-internal fun LoginScreen() {
+internal fun LoginScreen(
+    onLogin : (String , String) -> Unit,
+    onSignUp : (String , String) -> Unit,
+    errorMessage : String?
+) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -125,6 +131,7 @@ internal fun LoginScreen() {
             )
         }
     }
+
 }
 
 
