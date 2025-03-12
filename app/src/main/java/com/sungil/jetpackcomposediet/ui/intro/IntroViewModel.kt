@@ -26,7 +26,6 @@ class IntroViewModel : ViewModel() {
                     _authState.value = auth.currentUser
                     return@addOnCompleteListener
                 }
-                _errorState.value = null
                 _errorState.value = task.exception?.message
             }
         }
@@ -41,7 +40,6 @@ class IntroViewModel : ViewModel() {
                     _authState.value = auth.currentUser
                     return@addOnCompleteListener
                 }
-                _errorState.value = null
                 _errorState.value = task.exception?.message
             }
         }

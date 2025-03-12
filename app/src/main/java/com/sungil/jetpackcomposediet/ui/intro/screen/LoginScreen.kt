@@ -1,6 +1,5 @@
 package com.sungil.jetpackcomposediet.ui.intro.screen
 
-import android.widget.NumberPicker.OnValueChangeListener
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,7 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -31,7 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sungil.jetpackcomposediet.R
@@ -109,19 +106,14 @@ internal fun LoginScreen(
                 textStyle = TextStyle(color = Color.Black, fontSize = 16.sp)
             )
         }
-        LaunchedEffect(errorMessage) {
-            errorMessage?.let { message ->
-                coroutineScope.launch {
-                    snackBarHost.currentSnackbarData?.dismiss()
-                    snackBarHost.showSnackbar(
-                        message,
-                        null,
-                        true
-                    )
-                }
-            }
+        errorMessage?.let {
+            Text(
+                text = it,
+                color = Color.Red,
+                modifier = Modifier.padding(10.dp),
+                fontSize = 16.sp
+            )
         }
-
         Button(
             modifier = Modifier.fillMaxWidth().
             padding(start = 8.dp , end = 8.dp , top = 10.dp ),
