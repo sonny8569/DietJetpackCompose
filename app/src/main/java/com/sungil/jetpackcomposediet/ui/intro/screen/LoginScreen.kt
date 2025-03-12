@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -29,21 +30,26 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sungil.jetpackcomposediet.R
+import com.sungil.jetpackcomposediet.ui.CustomButton
+import com.sungil.jetpackcomposediet.ui.CustomEditText
 import kotlinx.coroutines.launch
 
 @Composable
 internal fun LoginScreen(
-    onLogin : (String , String) -> Unit,
-    onSignUp : (String , String) -> Unit,
-    errorMessage : String?
+    onLogin: (String, String) -> Unit,
+    onSignUp: (String, String) -> Unit,
+    errorMessage: String?
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val snackBarHost = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,52 +66,20 @@ internal fun LoginScreen(
                 .clip(RoundedCornerShape(100.dp))
         )
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp)
-                .background(Color.LightGray, RoundedCornerShape(8.dp))
-                .padding(16.dp)
-        ) {
-            if (email.isEmpty()) {
-                Text(
-                    text = "email",
-                    color = Color.Gray,
-                    style = TextStyle(fontSize = 16.sp)
-                )
-            }
+        CustomEditText(
+            value = email,
+            onValueChange = { email = it },
+            hint = "email",
+            isPassword = false
+        )
 
-            BasicTextField(
-                value = email,
-                onValueChange = { email = it },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                textStyle = TextStyle(color = Color.Black, fontSize = 16.sp)
-            )
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 8.dp)
-                .background(Color.LightGray, RoundedCornerShape(8.dp))
-                .padding(16.dp)
-        ) {
-            if (password.isEmpty()) {
-                Text(
-                    text = "password",
-                    color = Color.Gray,
-                    style = TextStyle(fontSize = 16.sp)
-                )
-            }
+        CustomEditText(
+            value = password,
+            onValueChange = { password = it },
+            hint = "password",
+            isPassword = true
+        )
 
-            BasicTextField(
-                value = password,
-                onValueChange = { password = it },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                textStyle = TextStyle(color = Color.Black, fontSize = 16.sp)
-            )
-        }
         errorMessage?.let {
             Text(
                 text = it,
@@ -114,72 +88,58 @@ internal fun LoginScreen(
                 fontSize = 16.sp
             )
         }
-        Button(
-            modifier = Modifier.fillMaxWidth().
-            padding(start = 8.dp , end = 8.dp , top = 10.dp ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Blue
-            ),
-            onClick = {
-                if(email.isEmpty() || password.isEmpty()){
-                    coroutineScope.launch {
-                        val snackBar =  snackBarHost.showSnackbar(
-                            "아이디와 Password을 확인해주세요",
-                            null,
-                           true
-                        )
-                        when(snackBar) {
-                            SnackbarResult.ActionPerformed -> {}
-                            SnackbarResult.Dismissed -> {}
-                        }
-                    }
-                    return@Button
-                }
-                onLogin(email , password)
+
+        val showSnackbar: (String) -> Unit = { message ->
+            coroutineScope.launch {
+                snackBarHost.showSnackbar(
+                    message,
+                    duration = SnackbarDuration.Short
+                )
             }
-        ) {
-            Text(
-                text = "Login",
-                color = Color.White
-            )
         }
-        Button(
-            modifier = Modifier.fillMaxWidth().
-            padding(start = 8.dp , end = 8.dp , top = 10.dp ),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Gray
-            ),
+
+        CustomButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, end = 8.dp, top = 10.dp),
+            text = "Login",
             onClick = {
-                if(email.isEmpty() || password.isEmpty()){
-                    coroutineScope.launch {
-                        val snackBar =  snackBarHost.showSnackbar(
-                            "아이디와 Password을 확인해주세요",
-                            null,
-                            true
-                        )
-                        when(snackBar) {
-                            SnackbarResult.ActionPerformed -> {}
-                            SnackbarResult.Dismissed -> {}
-                        }
-                    }
-                    return@Button
+                if (email.isEmpty() || password.isEmpty()) {
+                    showSnackbar("아이디와 비밀번호를 입력해주세요")
+                    return@CustomButton
                 }
-                onSignUp(email , password)
+                onLogin(email, password)
+            },
+            backgroundColor = Color.Blue
+        )
+
+        CustomButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, end = 8.dp, top = 10.dp),
+            text = "Sign up",
+            onClick = {
+                if (email.isEmpty() || password.isEmpty()) {
+                    showSnackbar("아이디와 비밀번호를 입력해주세요")
+                    return@CustomButton
+                }
+                onSignUp(email, password)
+            },
+            backgroundColor = Color.Gray
+        )
+
+        LaunchedEffect(errorMessage) {
+            errorMessage?.let { message ->
+                coroutineScope.launch {
+                    snackBarHost.currentSnackbarData?.dismiss()
+                    snackBarHost.showSnackbar(
+                        message,
+                        duration = SnackbarDuration.Short
+                    )
+                }
             }
-        ) {
-            Text(
-                text = "Sign up",
-                color = Color.White
-            )
         }
+
         SnackbarHost(hostState = snackBarHost)
     }
-
 }
-
-
-//@Preview
-//@Composable
-//fun preview() {
-//    LoginScreen()
-//}
