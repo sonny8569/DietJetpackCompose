@@ -26,10 +26,12 @@ class IntroViewModel : ViewModel() {
                     _authState.value = auth.currentUser
                     return@addOnCompleteListener
                 }
+                _errorState.value = null
                 _errorState.value = task.exception?.message
             }
         }
     }
+
 
     //로그인
     fun login(email: String, password: String) {
@@ -39,6 +41,7 @@ class IntroViewModel : ViewModel() {
                     _authState.value = auth.currentUser
                     return@addOnCompleteListener
                 }
+                _errorState.value = null
                 _errorState.value = task.exception?.message
             }
         }

@@ -13,13 +13,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sungil.jetpackcomposediet.R
+import kotlinx.coroutines.launch
 
 @Composable
 internal fun LoginScreen(
@@ -40,7 +45,8 @@ internal fun LoginScreen(
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
+    val snackBarHost = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -103,6 +109,18 @@ internal fun LoginScreen(
                 textStyle = TextStyle(color = Color.Black, fontSize = 16.sp)
             )
         }
+        LaunchedEffect(errorMessage) {
+            errorMessage?.let { message ->
+                coroutineScope.launch {
+                    snackBarHost.currentSnackbarData?.dismiss()
+                    snackBarHost.showSnackbar(
+                        message,
+                        null,
+                        true
+                    )
+                }
+            }
+        }
 
         Button(
             modifier = Modifier.fillMaxWidth().
@@ -110,7 +128,23 @@ internal fun LoginScreen(
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Blue
             ),
-            onClick = {}
+            onClick = {
+                if(email.isEmpty() || password.isEmpty()){
+                    coroutineScope.launch {
+                        val snackBar =  snackBarHost.showSnackbar(
+                            "아이디와 Password을 확인해주세요",
+                            null,
+                           true
+                        )
+                        when(snackBar) {
+                            SnackbarResult.ActionPerformed -> {}
+                            SnackbarResult.Dismissed -> {}
+                        }
+                    }
+                    return@Button
+                }
+                onLogin(email , password)
+            }
         ) {
             Text(
                 text = "Login",
@@ -123,20 +157,37 @@ internal fun LoginScreen(
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Gray
             ),
-            onClick = {}
+            onClick = {
+                if(email.isEmpty() || password.isEmpty()){
+                    coroutineScope.launch {
+                        val snackBar =  snackBarHost.showSnackbar(
+                            "아이디와 Password을 확인해주세요",
+                            null,
+                            true
+                        )
+                        when(snackBar) {
+                            SnackbarResult.ActionPerformed -> {}
+                            SnackbarResult.Dismissed -> {}
+                        }
+                    }
+                    return@Button
+                }
+                onSignUp(email , password)
+            }
         ) {
             Text(
                 text = "Sign up",
                 color = Color.White
             )
         }
+        SnackbarHost(hostState = snackBarHost)
     }
 
 }
 
 
-@Preview
-@Composable
-fun preview() {
-    LoginScreen()
-}
+//@Preview
+//@Composable
+//fun preview() {
+//    LoginScreen()
+//}
